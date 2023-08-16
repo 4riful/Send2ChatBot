@@ -1,5 +1,5 @@
 #!/bin/bash
-
+#!writtenby_xettabyte
 CONFIG=config.yaml
 hname=$(hostname)
 
