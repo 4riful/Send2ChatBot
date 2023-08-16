@@ -1,0 +1,12 @@
+discord:
+  - id: "ariful#1095"
+    discord_channel: "recon-bot"
+    discord_username: "Xetta's Recon"
+    discord_format: "{{data}}"
+    discord_webhook_url: "https://discord.com/api/webhooks/933785292102598678/BEbSgtbXk5XBK7UlkFkoGGJ8bbv18cXdFwwM_AUXelrhqQ_WmGIvXhrLCtRJLgWJfmx6"
+
+telegram:
+  - id: "Anik"
+    telegram_api_key: "5251534969:AAEXUjyY0hPLMGrYo4sDhveR2DI4boxl4K4"
+    telegram_chat_id: "1289941194"
+    telegram_format: "{{data}}"
