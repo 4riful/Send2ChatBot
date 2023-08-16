@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="assets/send2chatbot-logo.png" alt="Send2ChatBot Logo" width="200" height="200">
+  <img src="assets/send2chatbot-logot.png" alt="Send2ChatBot Logo" width="200" height="200">
 </div>
 
 # Send2ChatBot 🤖
