@@ -52,14 +52,12 @@ chmod +x Send2ChatBot.sh
 ## Usage 📦
 ```bash
 To send a file to Telegram:
-
 ./Send2ChatBot.sh -t /path/to/your/file.txt
 
 To send a file to Discord:
-
 ./Send2ChatBot.sh -d /path/to/your/file.txt
-To send a file to both platforms (if configurations exist for both):
 
+To send a file to both platforms (if configurations exist for both):
 ./Send2ChatBot.sh /path/to/your/file.txt
 
 ```
