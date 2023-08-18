@@ -1,12 +1,7 @@
-discord:
-  - id: "crawl"
-    discord_channel: "crawl"
-    discord_username: "test"
-    discord_format: "{{data}}"
-    discord_webhook_url: "https://discord.com/api/webhooks/XXXXXXXX"
 telegram:
-  - id: "tel"
-    telegram_api_key: "XXXXXXXXXXXX"
-    telegram_chat_id: "XXXXXXXX"
-    telegram_format: "{{data}}"
-    telegram_parsemode: "Markdown"
+  api_key: "YOUR_TELEGRAM_API_KEY"
+  chat_id: "YOUR_TELEGRAM_CHAT_ID"
+
+discord:
+  webhook_url: "YOUR_DISCORD_WEBHOOK_URL"
+
