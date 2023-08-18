@@ -38,18 +38,12 @@ Send2ChatBot is a versatile 🌟 Bash script that simplifies the process of send
 Create a configuration file named `config.yaml` in the `~/.custom_path/` directory. Fill in the necessary details for both Telegram and Discord:
 
 ```yaml
-discord:
-  - id: "crawl"
-    discord_channel: "crawl"
-    discord_username: "test"
-    discord_format: "{{data}}"
-    discord_webhook_url: "https://discord.com/api/webhooks/XXXXXXXX"
 telegram:
-  - id: "tel"
-    telegram_api_key: "XXXXXXXXXXXX"
-    telegram_chat_id: "XXXXXXXX"
-    telegram_format: "{{data}}"
-    telegram_parsemode: "Markdown"
+  api_key: "YOUR_TELEGRAM_API_KEY"
+  chat_id: "YOUR_TELEGRAM_CHAT_ID"
+
+discord:
+  webhook_url: "YOUR_DISCORD_WEBHOOK_URL"
 ```
 ### Make the Script Executable:
 ```
