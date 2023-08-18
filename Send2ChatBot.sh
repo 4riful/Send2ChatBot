@@ -3,6 +3,7 @@
 CONFIG_FILE="config.yaml"
 MAX_DISCORD_FILE_SIZE=25000000
 LOADING_CHARS="⠋⠙⠹⠸⠼⠴⠦⠧⠇⠏"  # Characters for loading animation
+HOSTNAME=$(hostname)  # Get the hostname of the system
 
 # Dracula color codes
 DRACULA_PURPLE="\e[0;35m"
@@ -25,7 +26,7 @@ function send_message_to_telegram() {
     
     # Actual Telegram sending logic using curl
     curl -s -F document=@"$file_path" "https://api.telegram.org/bot$TELEGRAM_API_KEY/sendDocument?chat_id=$TELEGRAM_CHAT_ID" > /dev/null
-    echo -e "${DRACULA_GREEN}✅ Success:${DRACULA_RESET} File sent successfully to Telegram: $file_name"
+    echo -e "${DRACULA_GREEN}✅ Success:${DRACULA_RESET} File sent successfully to Telegram from $HOSTNAME: $file_name"
 }
 
 function send_file_to_discord() {
@@ -55,7 +56,7 @@ function send_file_to_discord() {
     
     # Actual Discord sending logic using curl
     curl -F file=@"$file_path" "$DISCORD_WEBHOOK_URL" > /dev/null
-    echo -e "${DRACULA_GREEN}✅ Success:${DRACULA_RESET} File sent successfully to Discord: $file_name"
+    echo -e "${DRACULA_GREEN}✅ Success:${DRACULA_RESET} File sent successfully to Discord from $HOSTNAME: $file_name"
 }
 
 function print_usage() {
@@ -98,7 +99,7 @@ case $1 in
             send_message_to_telegram "$1"
             send_file_to_discord "$1"
         else
-            echo -e "${DRACULA_ORANGE}❌ Error:${DRACULA_RESET} No flag specified and configurations are missing for both platforms."
+            echo -e "${DRACULA_ORANGE}❌ Error:${DRACULA_RESET} No valid configuration found for Telegram or Discord."
             print_usage
             exit 1
         fi
