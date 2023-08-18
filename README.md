@@ -67,6 +67,9 @@ Use the following flags to specify the destination:
 - `-t`: Send the file to Telegram.
 - `-d`: Send the file to Discord.
 - No flag: If configurations exist for both platforms, the file will be sent to both.
+[![asciicast](https://asciinema.org/a/E4QrxzzJh0erpKEO0n3wyYZNX.svg)](https://asciinema.org/a/E4QrxzzJh0erpKEO0n3wyYZNX)
+
+
 
 **Note:** Before using the script to send messages and files, ensure that you've properly configured your `config.yaml` file with the necessary API keys, chat IDs, and webhook URLs. Make sure to replace `/path/to/your/file.txt` with the actual path to the file you want to send.
 
