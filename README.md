@@ -67,7 +67,7 @@ Use the following flags to specify the destination:
 - `-t`: Send the file to Telegram.
 - `-d`: Send the file to Discord.
 - No flag: If configurations exist for both platforms, the file will be sent to both.
-[![asciicast](https://asciinema.org/a/E4QrxzzJh0erpKEO0n3wyYZNX.svg)](https://asciinema.org/a/E4QrxzzJh0erpKEO0n3wyYZNX)
+[![asciicast](https://asciinema.org/a/E4QrxzzJh0erpKEO0n3wyYZNX.svg)](https://asciinema.org/a/E4QrxzzJh0erpKEO0n3wyYZNX) 
 
 
 
