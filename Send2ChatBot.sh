@@ -32,10 +32,11 @@ function send_message_to_telegram() {
 
     # Actual Telegram sending logic using curl
     response=$(curl -s -F document=@"$file_path" "https://api.telegram.org/bot$TELEGRAM_API_KEY/sendDocument?chat_id=$TELEGRAM_CHAT_ID")
-    if [[ $response == *"\"ok\":true"* ]]; then
-        echo -e "${DRACULA_GREEN}✅ Success:${DRACULA_RESET} File sent successfully to Telegram from $HOSTNAME: $file_name"
+    
+    if [[ "$response" == *"\"ok\":false"* ]]; then
+        echo -e "${DRACULA_RED}❌ Error:${DRACULA_RESET} Failed to send file to Telegram."
     else
-        echo -e "${DRACULA_RED}❌ Error:${DRACULA_RESET} Failed to send file to Telegram: $file_name"
+        echo -e "${DRACULA_GREEN}✅ Success:${DRACULA_RESET} File sent successfully to Telegram from $HOSTNAME: $file_name"
     fi
 }
 
@@ -70,18 +71,16 @@ function send_file_to_discord() {
     echo -e "\b${DRACULA_GREEN}✅ Done!${DRACULA_RESET}"
 
     # Actual Discord sending logic using curl
-    response=$(curl -F file=@"$file_path" "$DISCORD_WEBHOOK_URL")
-    if [[ $response == *"\"message\":\"Unknown Webhook\""* ]]; then
-        echo -e "${DRACULA_RED}❌ Error:${DRACULA_RESET} Failed to send file to Discord: $file_name"
-        echo -e "${DRACULA_RED}❌ Error:${DRACULA_RESET} Discord webhook is not valid."
+    response=$(curl -s -F file=@"$file_path" "$DISCORD_WEBHOOK_URL")
+    
+    if [[ "$response" == *"\"message\":\"Unknown Webhook\""* ]]; then
+        echo -e "${DRACULA_RED}❌ Error:${DRACULA_RESET} Failed to send file to Discord. Webhook is not valid."
     else
         echo -e "${DRACULA_GREEN}✅ Success:${DRACULA_RESET} File sent successfully to Discord from $HOSTNAME: $file_name"
     fi
 }
 
 function print_usage() {
-    echo -e "${DRACULA_PURPLE}🔗 Send2ChatBot: Share files effortlessly${DRACULA_RESET}"
-    echo -e "${DRACULA_CYAN}------------------------------------------------${DRACULA_RESET}"
     echo "Usage: $0 [-t | -d] <file_path>"
     echo "Options:"
     echo "  -t  Send the file to Telegram"
@@ -91,6 +90,11 @@ function print_usage() {
 # Customize the output messages with colors
 echo -e "${DRACULA_PURPLE}🔗 Send2ChatBot: Share files effortlessly${DRACULA_RESET}"
 echo -e "${DRACULA_CYAN}------------------------------------------------${DRACULA_RESET}"
+
+# Add alias to use the script globally
+
+echo -e "${DRACULA_ORANGE}🌟 Tip:${DRACULA_RESET} To use this script globally, you can create an alias like:"
+echo -e "${DRACULA_CYAN}    alias s2cb='$PWD/Send2ChatBot.sh'${DRACULA_RESET}"
 
 if [ -z "$1" ]; then
     echo -e "${DRACULA_ORANGE}❌ Error:${DRACULA_RESET} No flag specified."
@@ -127,5 +131,4 @@ case $1 in
         fi
         ;;
 esac
-echo -e "${DRACULA_ORANGE}🌟 Tip:${DRACULA_RESET} To use this script globally, you can create an alias like:"
-echo -e "${DRACULA_CYAN}    alias s2cb='$PWD/Send2ChatBot.sh'${DRACULA_RESET}"
+
