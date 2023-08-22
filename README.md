@@ -57,9 +57,8 @@ To send a file to Telegram:
 To send a file to Discord:
 ./Send2ChatBot.sh -d /path/to/your/file.txt
 
-To send a file to both platforms (if configurations exist for both):
-./Send2ChatBot.sh /path/to/your/file.txt
-
+To use a custom config file use -c flag 
+./Send2ChatBot.sh -d -c custom_config.yaml /path/to/your/file.txt
 ```
 
 Use the following flags to specify the destination:
