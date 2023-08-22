@@ -16,20 +16,19 @@ function send_message_to_telegram() {
     local file_path="$1"
     TELEGRAM_API_KEY=$(grep 'api_key' $CONFIG_FILE | awk '{print $2}' | sed 's/"//g')
     TELEGRAM_CHAT_ID=$(grep 'chat_id' $CONFIG_FILE | awk '{print $2}' | sed 's/"//g')
-    
+
+    if [ -z "$TELEGRAM_API_KEY" ] || [ -z "$TELEGRAM_CHAT_ID" ]; then
+        echo -e "${DRACULA_ORANGE}❌ Error:${DRACULA_RESET} Telegram configuration is missing or incomplete."
+        exit 1
+    fi
+
     if [ ! -f "$file_path" ]; then
         echo -e "${DRACULA_ORANGE}❌ Error:${DRACULA_RESET} File not found: $file_path"
         exit 1
     fi
 
     file_name=$(basename "$file_path")
-    echo -en "${DRACULA_CYAN}🚀 Sending to Telegram:${DRACULA_RESET} "
-    for ((i=0; i<10; i++)); do
-        echo -n "${LOADING_CHARS:i%10:1}"
-        sleep 0.1
-        echo -ne "\b"
-    done
-    echo -e "\b${DRACULA_GREEN}✅ Done!${DRACULA_RESET}"
+
     # Actual Telegram sending logic using curl
     curl -s -F document=@"$file_path" "https://api.telegram.org/bot$TELEGRAM_API_KEY/sendDocument?chat_id=$TELEGRAM_CHAT_ID" > /dev/null
     echo -e "${DRACULA_GREEN}✅ Success:${DRACULA_RESET} File sent successfully to Telegram from $HOSTNAME: $file_name"
@@ -38,7 +37,12 @@ function send_message_to_telegram() {
 function send_file_to_discord() {
     local file_path="$1"
     DISCORD_WEBHOOK_URL=$(grep 'webhook_url' $CONFIG_FILE | awk '{print $2}' | sed 's/"//g')
-    
+
+    if [ -z "$DISCORD_WEBHOOK_URL" ]; then
+        echo -e "${DRACULA_ORANGE}❌ Error:${DRACULA_RESET} Discord configuration is missing or incomplete."
+        exit 1
+    fi
+
     if [ ! -f "$file_path" ]; then
         echo -e "${DRACULA_ORANGE}❌ Error:${DRACULA_RESET} File not found: $file_path"
         exit 1
@@ -46,11 +50,11 @@ function send_file_to_discord() {
 
     file_name=$(basename "$file_path")
     file_size=$(stat -c %s "$file_path")
-    
+
     if [ "$file_size" -gt "$MAX_DISCORD_FILE_SIZE" ]; then
         echo -e "${DRACULA_ORANGE}⚠️ Warning:${DRACULA_RESET} File size is larger than 25 MB. Consider sending via Telegram."
     fi
-    
+
     # Display loading animation for Discord
     echo -en "${DRACULA_CYAN}🚀 Sending to Discord:${DRACULA_RESET} "
     for ((i=0; i<10; i++)); do
@@ -59,7 +63,7 @@ function send_file_to_discord() {
         echo -ne "\b"
     done
     echo -e "\b${DRACULA_GREEN}✅ Done!${DRACULA_RESET}"
-    
+
     # Actual Discord sending logic using curl
     curl -F file=@"$file_path" "$DISCORD_WEBHOOK_URL" > /dev/null
     echo -e "${DRACULA_GREEN}✅ Success:${DRACULA_RESET} File sent successfully to Discord from $HOSTNAME: $file_name"
@@ -75,9 +79,7 @@ function print_usage() {
 # Customize the output messages with colors
 echo -e "${DRACULA_PURPLE}🔗 Send2ChatBot: Share files effortlessly${DRACULA_RESET}"
 echo -e "${DRACULA_CYAN}------------------------------------------------${DRACULA_RESET}"
-# Check for alias suggestion
-echo -e "${DRACULA_ORANGE}🌟 Tip:${DRACULA_RESET} To use this script globally, you can create an alias like:"
-echo -e "${DRACULA_CYAN}    alias s2dt='$PWD/Send2ChatBot.sh'${DRACULA_RESET}"
+
 if [ -z "$1" ]; then
     echo -e "${DRACULA_ORANGE}❌ Error:${DRACULA_RESET} No flag specified."
     print_usage
@@ -99,7 +101,6 @@ case $1 in
         send_file_to_discord "$2"
         ;;
     *)
-        # Check if both configurations are available
         TELEGRAM_API_KEY=$(grep 'api_key' $CONFIG_FILE | awk '{print $2}' | sed 's/"//g')
         DISCORD_WEBHOOK_URL=$(grep 'webhook_url' $CONFIG_FILE | awk '{print $2}' | sed 's/"//g')
         if [ -n "$TELEGRAM_API_KEY" ] && [ -n "$DISCORD_WEBHOOK_URL" ]; then
@@ -114,3 +115,6 @@ case $1 in
         ;;
 esac
 
+# Add alias to use the script globally
+echo -e "\n${DRACULA_ORANGE}📚 Info:${DRACULA_RESET} To use this script globally, you can add the following line to your shell profile (e.g., ~/.bashrc or ~/.zshrc):"
+echo -e "${DRACULA_CYAN}    alias s2dt='$PWD/Send2ChatBot.sh'${DRACULA_RESET}"
