@@ -72,9 +72,11 @@ function send_file_to_discord() {
 
     # Actual Discord sending logic using curl
     response=$(curl -s -F file=@"$file_path" "$DISCORD_WEBHOOK_URL")
-    
+
     if [[ "$response" == *"\"message\":\"Unknown Webhook\""* ]]; then
         echo -e "${DRACULA_RED}❌ Error:${DRACULA_RESET} Failed to send file to Discord. Webhook is not valid."
+    elif [[ "$response" == *"\"message\":\"payload too large\""* ]]; then
+        echo -e "${DRACULA_RED}❌ Error:${DRACULA_RESET} File size is too large. Discord has a file size limit of approximately 25 MB."
     else
         echo -e "${DRACULA_GREEN}✅ Success:${DRACULA_RESET} File sent successfully to Discord from $HOSTNAME: $file_name"
     fi
