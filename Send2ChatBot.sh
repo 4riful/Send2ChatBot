@@ -10,6 +10,7 @@ DRACULA_PURPLE="\e[0;35m"
 DRACULA_CYAN="\e[0;36m"
 DRACULA_ORANGE="\e[0;33m"
 DRACULA_GREEN="\e[0;32m"
+DRACULA_RED="\e[0;31m"
 DRACULA_RESET="\e[0m"
 
 function send_message_to_telegram() {
@@ -30,8 +31,12 @@ function send_message_to_telegram() {
     file_name=$(basename "$file_path")
 
     # Actual Telegram sending logic using curl
-    curl -s -F document=@"$file_path" "https://api.telegram.org/bot$TELEGRAM_API_KEY/sendDocument?chat_id=$TELEGRAM_CHAT_ID" > /dev/null
-    echo -e "${DRACULA_GREEN}✅ Success:${DRACULA_RESET} File sent successfully to Telegram from $HOSTNAME: $file_name"
+    response=$(curl -s -F document=@"$file_path" "https://api.telegram.org/bot$TELEGRAM_API_KEY/sendDocument?chat_id=$TELEGRAM_CHAT_ID")
+    if [[ $response == *"\"ok\":true"* ]]; then
+        echo -e "${DRACULA_GREEN}✅ Success:${DRACULA_RESET} File sent successfully to Telegram from $HOSTNAME: $file_name"
+    else
+        echo -e "${DRACULA_RED}❌ Error:${DRACULA_RESET} Failed to send file to Telegram: $file_name"
+    fi
 }
 
 function send_file_to_discord() {
@@ -65,11 +70,18 @@ function send_file_to_discord() {
     echo -e "\b${DRACULA_GREEN}✅ Done!${DRACULA_RESET}"
 
     # Actual Discord sending logic using curl
-    curl -F file=@"$file_path" "$DISCORD_WEBHOOK_URL" > /dev/null
-    echo -e "${DRACULA_GREEN}✅ Success:${DRACULA_RESET} File sent successfully to Discord from $HOSTNAME: $file_name"
+    response=$(curl -F file=@"$file_path" "$DISCORD_WEBHOOK_URL")
+    if [[ $response == *"\"message\":\"Unknown Webhook\""* ]]; then
+        echo -e "${DRACULA_RED}❌ Error:${DRACULA_RESET} Failed to send file to Discord: $file_name"
+        echo -e "${DRACULA_RED}❌ Error:${DRACULA_RESET} Discord webhook is not valid."
+    else
+        echo -e "${DRACULA_GREEN}✅ Success:${DRACULA_RESET} File sent successfully to Discord from $HOSTNAME: $file_name"
+    fi
 }
 
 function print_usage() {
+    echo -e "${DRACULA_PURPLE}🔗 Send2ChatBot: Share files effortlessly${DRACULA_RESET}"
+    echo -e "${DRACULA_CYAN}------------------------------------------------${DRACULA_RESET}"
     echo "Usage: $0 [-t | -d] <file_path>"
     echo "Options:"
     echo "  -t  Send the file to Telegram"
@@ -101,6 +113,7 @@ case $1 in
         send_file_to_discord "$2"
         ;;
     *)
+        # Check if both configurations are available
         TELEGRAM_API_KEY=$(grep 'api_key' $CONFIG_FILE | awk '{print $2}' | sed 's/"//g')
         DISCORD_WEBHOOK_URL=$(grep 'webhook_url' $CONFIG_FILE | awk '{print $2}' | sed 's/"//g')
         if [ -n "$TELEGRAM_API_KEY" ] && [ -n "$DISCORD_WEBHOOK_URL" ]; then
@@ -114,7 +127,5 @@ case $1 in
         fi
         ;;
 esac
-
-# Add alias to use the script globally
-echo -e "\n${DRACULA_ORANGE}📚 Info:${DRACULA_RESET} To use this script globally, you can add the following line to your shell profile (e.g., ~/.bashrc or ~/.zshrc):"
-echo -e "${DRACULA_CYAN}    alias s2dt='$PWD/Send2ChatBot.sh'${DRACULA_RESET}"
+echo -e "${DRACULA_ORANGE}🌟 Tip:${DRACULA_RESET} To use this script globally, you can create an alias like:"
+echo -e "${DRACULA_CYAN}    alias s2cb='$PWD/Send2ChatBot.sh'${DRACULA_RESET}"
