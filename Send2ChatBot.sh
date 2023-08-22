@@ -121,7 +121,7 @@ echo -e "${DRACULA_CYAN}------------------------------------------------${DRACUL
 
 # Add alias to use the script globally
 echo -e "${DRACULA_ORANGE}🌟 Tip:${DRACULA_RESET} To use this script globally, you can create an alias like:"
-echo -e "${DRACULA_CYAN}    alias s2cb='$PWD/Send2ChatBot.sh'${DRACULA_RESET}"
+echo -e "${DRACULA_CYAN}    alias s2b='$PWD/Send2ChatBot.sh'${DRACULA_RESET}"
 
 if [ -z "$action" ]; then
     echo -e "${DRACULA_ORANGE}❌ Error:${DRACULA_RESET} No flag specified."
